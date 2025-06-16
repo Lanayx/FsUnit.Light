@@ -23,12 +23,12 @@ module Xunit =
     let inline shouldBeSmallerThan<'a when 'a: comparison> (expected: 'a) (actual: 'a) =
         Assert.True(actual < expected, $"Assert.True() Failure
 Expected: Smaller than {expected}
-Actual:   {actual}")
+Actual: {actual}")
 
     let inline shouldBeGreaterThan<'a when 'a: comparison> (expected: 'a) (actual: 'a) =
         Assert.True(actual > expected, $"Assert.True() Failure
 Expected: Greater than {expected}
-Actual:   {actual}")
+Actual: {actual}")
 
     let inline shouldFail<'exn when 'exn :> exn>(f: unit -> unit) =
         f |> Assert.Throws<'exn> |> ignore
