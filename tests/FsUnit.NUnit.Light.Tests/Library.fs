@@ -58,3 +58,55 @@ module ShouldBeSmallerThanTests =
         shouldFail<AssertionException>(fun () -> 2 |> shouldBeSmallerThan 1)
         shouldFail<AssertionException>(fun () -> "a" |> shouldBeSmallerThan "a")
         shouldFail<AssertionException>(fun () -> 2.0 |> shouldBeSmallerThan 1.0)
+
+module ShouldContainTests =
+
+    [<Test>]
+    let ``shouldContain passes for contained values``() =
+        [ 1; 2; 3 ] |> shouldContain 2
+        "hello" |> shouldContain 'e'
+        [| 1; 2; 3 |] |> shouldContain 2
+
+    [<Test>]
+    let ``shouldContain fails for non-contained values``() =
+        shouldFail<AssertionException>(fun () -> [ 1; 2; 3 ] |> shouldContain 4)
+        shouldFail<AssertionException>(fun () -> "hello" |> shouldContain 'x')
+        shouldFail<AssertionException>(fun () -> [| 1; 2; 3 |] |> shouldContain 4)
+
+module ShouldNotContainTests =
+
+    [<Test>]
+    let ``shouldNotContain passes for non-contained values``() =
+        [ 1; 2; 3 ] |> shouldNotContain 4
+        "hello" |> shouldNotContain 'x'
+        [||] |> shouldNotContain ""
+
+    [<Test>]
+    let ``shouldNotContain fails for contained values``() =
+        shouldFail<AssertionException>(fun () -> [ 1; 2; 3 ] |> shouldNotContain 2)
+        shouldFail<AssertionException>(fun () -> "hello" |> shouldNotContain 'e')
+        shouldFail<AssertionException>(fun () -> [| 1; 2; 3 |] |> shouldNotContain 2)
+
+
+module ShouldContainTextTests =
+
+    [<Test>]
+    let ``shouldContainText passes for contained text``() =
+        "hello world" |> shouldContainText "world"
+        "hello" |> shouldContainText ""
+
+    [<Test>]
+    let ``shouldContainText fails for non-contained text``() =
+        shouldFail<AssertionException>(fun () -> "hello world" |> shouldContainText "planet")
+        shouldFail<AssertionException>(fun () -> "" |> shouldContainText " ")
+
+module ShouldNotContainTextTests =
+    [<Test>]
+    let ``shouldNotContainText passes for non-contained text``() =
+        "hello world" |> shouldNotContainText "planet"
+        "" |> shouldNotContainText " "
+
+    [<Test>]
+    let ``shouldNotContainText fails for contained text``() =
+        shouldFail<AssertionException>(fun () -> "hello world" |> shouldNotContainText "world")
+        shouldFail<AssertionException>(fun () -> "" |> shouldNotContainText "")

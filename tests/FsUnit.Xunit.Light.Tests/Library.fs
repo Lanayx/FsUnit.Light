@@ -59,3 +59,54 @@ module ShouldBeSmallerThanTests =
         shouldFail<TrueException>(fun () -> 2 |> shouldBeSmallerThan 1)
         shouldFail<TrueException>(fun () -> "a" |> shouldBeSmallerThan "a")
         shouldFail<TrueException>(fun () -> 2.0 |> shouldBeSmallerThan 1.0)
+
+module ShouldContainTests =
+
+    [<Fact>]
+    let ``shouldContain passes for contained values``() =
+        [ 1; 2; 3 ] |> shouldContain 2
+        "hello" |> shouldContain 'e'
+        [| 1; 2; 3 |] |> shouldContain 2
+
+    [<Fact>]
+    let ``shouldContain fails for non-contained values``() =
+        shouldFail<ContainsException>(fun () -> [ 1; 2; 3 ] |> shouldContain 4)
+        shouldFail<ContainsException>(fun () -> "hello" |> shouldContain 'x')
+        shouldFail<ContainsException>(fun () -> [| 1; 2; 3 |] |> shouldContain 4)
+
+module ShouldNotContainTests =
+
+    [<Fact>]
+    let ``shouldNotContain passes for non-contained values``() =
+        [ 1; 2; 3 ] |> shouldNotContain 4
+        "hello" |> shouldNotContain 'x'
+        [||] |> shouldNotContain ""
+
+    [<Fact>]
+    let ``shouldNotContain fails for contained values``() =
+        shouldFail<DoesNotContainException>(fun () -> [ 1; 2; 3 ] |> shouldNotContain 2)
+        shouldFail<DoesNotContainException>(fun () -> "hello" |> shouldNotContain 'e')
+        shouldFail<DoesNotContainException>(fun () -> [| 1; 2; 3 |] |> shouldNotContain 2)
+
+module ShouldContainTextTests =
+
+    [<Fact>]
+    let ``shouldContainText passes for contained text``() =
+        "hello world" |> shouldContainText "world"
+        "hello" |> shouldContainText ""
+
+    [<Fact>]
+    let ``shouldContainText fails for non-contained text``() =
+        shouldFail<ContainsException>(fun () -> "hello world" |> shouldContainText "planet")
+        shouldFail<ContainsException>(fun () -> "" |> shouldContainText " ")
+
+module ShouldNotContainTextTests =
+    [<Fact>]
+    let ``shouldNotContainText passes for non-contained text``() =
+        "hello world" |> shouldNotContainText "planet"
+        "" |> shouldNotContainText " "
+
+    [<Fact>]
+    let ``shouldNotContainText fails for contained text``() =
+        shouldFail<DoesNotContainException>(fun () -> "hello world" |> shouldNotContainText "world")
+        shouldFail<DoesNotContainException>(fun () -> "" |> shouldNotContainText "")
