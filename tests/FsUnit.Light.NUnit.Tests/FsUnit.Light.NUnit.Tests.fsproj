@@ -14,10 +14,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
         <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\FsUnit.Light.NUnit\FsUnit.Light.NUnit.fsproj" />
+        <PackageReference Include="FsUnit.Light.NUnit" Version="0.1.0" />
     </ItemGroup>
 
 </Project>

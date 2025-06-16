@@ -14,10 +14,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
         <PackageReference Include="MSTest" Version="3.9.2"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\FsUnit.Light.MSTest\FsUnit.Light.MSTest.fsproj" />
+        <PackageReference Include="FsUnit.Light.MSTest" Version="0.1.0" />
     </ItemGroup>
     
 </Project>

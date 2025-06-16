@@ -15,10 +15,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
         <PackageReference Include="xunit.v3" Version="2.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\FsUnit.Light.Xunit\FsUnit.Light.Xunit.fsproj" />
+        <PackageReference Include="FsUnit.Light.xUnit" Version="0.1.0" />
     </ItemGroup>
     
 </Project>
