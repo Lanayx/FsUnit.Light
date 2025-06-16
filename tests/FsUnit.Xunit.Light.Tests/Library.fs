@@ -110,3 +110,61 @@ module ShouldNotContainTextTests =
     let ``shouldNotContainText fails for contained text``() =
         shouldFail<DoesNotContainException>(fun () -> "hello world" |> shouldNotContainText "world")
         shouldFail<DoesNotContainException>(fun () -> "" |> shouldNotContainText "")
+
+module ShouldEqualTests =
+
+    type Item() =
+        member val Id = "" with get, set
+
+    [<Fact>]
+    let ``shouldEqual passes for equal values``() =
+        1 |> shouldEqual 1
+        2.0 |> shouldEqual 2.0
+        "hello" |> shouldEqual "hello"
+        [ 1; 2; 3 ] |> shouldEqual [ 1; 2; 3 ]
+        [| 1; 2; 3 |] |> shouldEqual [| 1; 2; 3 |]
+        seq { 1; 2; 3 } |> shouldEqual (seq { 1; 2; 3 })
+        Map.ofList [ "a", 1; "b", 2 ] |> shouldEqual (Map.ofList [ "b", 2; "a", 1 ])
+        null |> shouldEqual null
+        let x = obj() in x |> shouldEqual x
+        {| Name = "John" |} |> shouldEqual {| Name = "John" |}
+
+    [<Fact>]
+    let ``shouldEqual fails for unequal values``() =
+        shouldFail<EqualException>(fun () -> 1 |> shouldEqual 2)
+        shouldFail<EqualException>(fun () -> 2.0 |> shouldEqual 3.0)
+        shouldFail<EqualException>(fun () -> "hello" |> shouldEqual "world")
+        shouldFail<EqualException>(fun () -> [ 1; 2; 3 ] |> shouldEqual [ 4; 5; 6 ])
+        shouldFail<EqualException>(fun () -> obj() |> shouldEqual (obj()))
+        shouldFail<EqualException>(fun () -> {| Name = "John" |} |> shouldEqual {| Name = "Jack" |})
+        shouldFail<EqualException>(fun () -> Item(Id = "1") |> shouldEqual (Item(Id = "1")))
+
+module ShouldNotEqualTests =
+
+    type Item() =
+        member val Id = "" with get, set
+
+    [<Fact>]
+    let ``shouldNotEqual passes for unequal values``() =
+        1 |> shouldNotEqual 2
+        2.0 |> shouldNotEqual 3.0
+        "hello" |> shouldNotEqual "world"
+        [ 1; 2; 3 ] |> shouldNotEqual [ 3; 2; 1 ]
+        [| 1; 2; 3 |] |> shouldNotEqual [| 4; 5; 6 |]
+        seq { 1; 2; 3 } |> shouldNotEqual (seq { 4; 5; 6 })
+        Map.ofList [ "a", 1; "b", 2 ] |> shouldNotEqual (Map.ofList [ "c", 3 ])
+        obj() |> shouldNotEqual (obj())
+        {| Name = "John" |} |> shouldNotEqual {| Name = "Jack" |}
+        Item(Id = "1") |> shouldNotEqual (Item(Id = "1"))
+
+    [<Fact>]
+    let ``shouldNotEqual fails for equal values``() =
+        shouldFail<NotEqualException>(fun () -> 1 |> shouldNotEqual 1)
+        shouldFail<NotEqualException>(fun () -> "hello" |> shouldNotEqual "hello")
+        shouldFail<NotEqualException>(fun () -> [ 1; 2; 3 ] |> shouldNotEqual [ 1; 2; 3 ])
+        shouldFail<NotEqualException>(fun () -> [| 1; 2; 3 |] |> shouldNotEqual [| 1; 2; 3 |])
+        shouldFail<NotEqualException>(fun () -> seq { 1; 2; 3 } |> shouldNotEqual (seq { 1; 2; 3 }))
+        shouldFail<NotEqualException>(fun () -> Map.ofList [ "a", 1; "b", 2 ] |> shouldNotEqual (Map.ofList [ "b", 2; "a", 1 ]))
+        shouldFail<NotEqualException>(fun () -> null |> shouldNotEqual null)
+        shouldFail<NotEqualException>(fun () -> let x = obj() in x |> shouldNotEqual x)
+        shouldFail<NotEqualException>(fun () -> {| Name = "John" |} |> shouldNotEqual {| Name = "John" |})
