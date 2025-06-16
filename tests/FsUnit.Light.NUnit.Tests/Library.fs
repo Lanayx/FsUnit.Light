@@ -1,8 +1,8 @@
-﻿namespace FsUnit.Xunit.Light.Tests
+﻿namespace FsUnit.Light.NUnit.Tests
 
 open System
 open NUnit.Framework
-open FsUnit.NUnit.Light
+open FsUnit.Light
 
 module ShouldBeEmptyTests =
 

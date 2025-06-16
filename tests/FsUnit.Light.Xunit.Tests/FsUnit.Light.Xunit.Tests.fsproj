@@ -7,15 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Library.fs" />
+        <Compile Include="Library.fs"/>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="xunit.v3" Version="2.0.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\FsUnit.NUnit.Light\FsUnit.NUnit.Light.fsproj" />
+      <ProjectReference Include="..\..\src\FsUnit.Light.Xunit\FsUnit.Light.Xunit.fsproj" />
     </ItemGroup>
-
+    
 </Project>

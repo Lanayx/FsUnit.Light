@@ -1,9 +1,9 @@
-﻿namespace FsUnit.Xunit.Light.Tests
+﻿namespace FsUnit.Light.Xunit.Tests
 
 open System
 open Xunit
 open Xunit.Sdk
-open FsUnit.Xunit.Light
+open FsUnit.Light
 
 module ShouldBeEmptyTests =
 
