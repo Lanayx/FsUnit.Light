@@ -14,7 +14,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsUnit.Light.NUnit.Tests", 
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsUnit.Light.MSTest", "src\FsUnit.Light.MSTest\FsUnit.Light.MSTest.fsproj", "{0A6B7D74-3BD9-4198-A099-CA4CB41F3D90}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsUnit.Light.MsTest.Tests", "tests\FsUnit.Light.MsTest.Tests\FsUnit.Light.MsTest.Tests.fsproj", "{CE4B0659-9847-433A-AA01-ADD3695AF3F2}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsUnit.Light.MSTest.Tests", "tests\FsUnit.Light.MSTest.Tests\FsUnit.Light.MSTest.Tests.fsproj", "{CE4B0659-9847-433A-AA01-ADD3695AF3F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
