@@ -1,5 +1,6 @@
 ﻿namespace FsUnit.Xunit.Light.Tests
 
+open System
 open NUnit.Framework
 open FsUnit.NUnit.Light
 
@@ -169,3 +170,17 @@ module ShouldNotEqualTests =
         shouldFail<AssertionException>(fun () -> null |> shouldNotEqual null)
         shouldFail<AssertionException>(fun () -> let x = obj() in x |> shouldNotEqual x)
         shouldFail<AssertionException>(fun () -> {| Name = "John" |} |> shouldNotEqual {| Name = "John" |})
+
+module ShouldFailTests =
+
+    [<Test>]
+    let ``shouldFail passes when the function throws the expected exception``() =
+        shouldFail<ArgumentNullException>(fun () -> null |> Array.max |> ignore)
+        shouldFail<ArgumentException>(fun () -> [||] |> Array.randomChoice |> ignore)
+        shouldFail<exn>(fun () -> failwith "Test failure")
+
+    [<Test>]
+    let ``shouldFail fails when the function does not throw the expected exception``() =
+        shouldFail<AssertionException>(fun () -> shouldFail<ArgumentNullException>(fun () -> [|1|] |> Array.max |> ignore))
+        shouldFail<AssertionException>(fun () -> shouldFail<ArgumentException>(fun () -> [|1|] |> Array.randomChoice |> ignore))
+        shouldFail<AssertionException>(fun () -> shouldFail id)
