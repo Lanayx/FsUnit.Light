@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net9.0</TargetFramework>
         <WarningsAsErrors>3239;0025;3261</WarningsAsErrors>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

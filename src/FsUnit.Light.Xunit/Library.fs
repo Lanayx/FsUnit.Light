@@ -3,7 +3,7 @@
 open Xunit
 
 [<AutoOpen>]
-module XUnit =
+module Xunit =
 
     let inline shouldEqual<'a> (expected: 'a) (actual: 'a) =
         Assert.Equal(expected, actual)
@@ -31,7 +31,7 @@ Expected: Greater than {expected}
 Actual:   {actual}")
 
     let inline shouldFail<'exn when 'exn :> exn>(f: unit -> unit) =
-        Assert.Throws<'exn>(f) |> ignore
+        f |> Assert.Throws<'exn> |> ignore
 
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.Contains(expected, actual)

@@ -3,6 +3,24 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <WarningsAsErrors>3239;0025;3261</WarningsAsErrors>
+        <Nullable>enable</Nullable>
+        <PackageId>FsUnit.Light.xUnit</PackageId>
+        <Title>FsUnit.Light.xUnit</Title>
+        <RootNamespace>FsUnit.Light</RootNamespace>
+        <AssemblyName>FsUnit.Light.Xunit</AssemblyName>
+        <Company>F# community</Company>
+        <Description>F# friendly wrappers around native xUnit asserts</Description>
+        <RepositoryUrl>https://github.com/Lanayx/FsUnit.Light</RepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/Lanayx/FsUnit.Light/tree/main/src/FsUnit.Light.Xunit</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>FsUnit;xUnit;F#;FSharp</PackageTags>
+        <Authors>Vladimir Shchur and contributors</Authors>
+        <Copyright>Copyright (c) Vladimir Shchur 2025</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Version>0.1.0</Version>
+        <PackageVersion>0.1.0</PackageVersion>
+        <PackageReleaseNotes>Initial commit</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

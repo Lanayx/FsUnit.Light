@@ -27,7 +27,7 @@ module NUnit =
         Assert.That(actual, Is.GreaterThan(expected))
 
     let inline shouldFail<'exn when 'exn :> exn>(f: unit -> unit) =
-        Assert.Throws<'exn>(f) |> ignore
+        f |> Assert.Throws<'exn> |> ignore
 
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.That(actual, Does.Contain(expected))
