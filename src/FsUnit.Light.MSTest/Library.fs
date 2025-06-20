@@ -1,5 +1,8 @@
 ﻿namespace FsUnit.Light
 
+open System.Collections
+open System.Linq
+open System.Text.Json
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
 [<AutoOpen>]
@@ -29,6 +32,9 @@ module MSTest =
     let inline shouldFail<'exn when 'exn :> exn>(f: unit -> unit) =
         f |> Assert.Throws<'exn> |> ignore
 
+    let inline shouldFailWithMessage<'ex when 'ex :> exn> (expected: string) (f: unit -> unit)  =
+        f |> Assert.Throws<'ex> |> _.Message |> shouldEqual expected
+
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.Contains(expected, actual)
 
@@ -37,3 +43,15 @@ module MSTest =
 
     let inline shouldHaveLength (expected: int) (actual: 'a seq) =
         Assert.AreEqual<int>(expected, Seq.length actual)
+
+    let inline shouldEquivalent (expected: 'a) (actual: 'a) =
+        match box expected, box actual with
+        | :? IEnumerable as expectedEnum, (:? IEnumerable as actualEnum) ->
+            CollectionAssert.AreEquivalent(
+                expectedEnum.Cast<obj>(),
+                actualEnum.Cast<obj>(),
+                System.Collections.Generic.EqualityComparer<obj>.Default)
+        | _ ->
+            Assert.AreEqual<string>(
+                JsonSerializer.Serialize(expected),
+                JsonSerializer.Serialize(actual))

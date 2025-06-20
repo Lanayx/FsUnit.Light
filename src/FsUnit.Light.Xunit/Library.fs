@@ -23,15 +23,18 @@ module Xunit =
     let inline shouldBeSmallerThan<'a when 'a: comparison> (expected: 'a) (actual: 'a) =
         Assert.True(actual < expected, $"Assert.True() Failure
 Expected: Smaller than {expected}
-Actual: {actual}")
+Actual:   {actual}")
 
     let inline shouldBeGreaterThan<'a when 'a: comparison> (expected: 'a) (actual: 'a) =
         Assert.True(actual > expected, $"Assert.True() Failure
 Expected: Greater than {expected}
-Actual: {actual}")
+Actual:   {actual}")
 
-    let inline shouldFail<'exn when 'exn :> exn>(f: unit -> unit) =
-        f |> Assert.Throws<'exn> |> ignore
+    let inline shouldFail<'ex when 'ex :> exn> (f: unit -> unit) =
+        f |> Assert.Throws<'ex> |> ignore
+
+    let inline shouldFailWithMessage<'ex when 'ex :> exn> (expected: string) (f: unit -> unit) =
+        f |> Assert.Throws<'ex> |> _.Message |> shouldEqual expected
 
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.Contains(expected, actual)
@@ -41,3 +44,6 @@ Actual: {actual}")
 
     let inline shouldHaveLength<'a> (expected: int) (actual: 'a seq) =
         Assert.Equal(expected, Seq.length actual)
+
+    let inline shouldEquivalent<'a> (expected: 'a) (actual: 'a) =
+        Assert.Equivalent(expected, actual, true)

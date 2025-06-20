@@ -2,7 +2,25 @@
 Minimalistic version of [FsUnitTyped](https://fsprojects.github.io/FsUnit/FsUnitTyped.html) for xUnit, NUnit ans MSTest.
 
 It provides zero-cost abstraction over native assertions with no dependency on `FsUnit`.
-You can find some other considerations [in the initial issue](https://github.com/fsprojects/FsUnit/issues/304).
+You can find some considerations [in the initial issue](https://github.com/fsprojects/FsUnit/issues/304).
+
+## Usage
+```fsharp
+1 |> shouldEqual 1 // pass
+1 |> shouldNotEqual 2 // pass
+[2] |> shouldContain 1 // pass
+[] |> shouldNotContain 1 // pass
+"Hello" |> shouldContainText "He" // pass
+"Hello" |> shouldNotContainText "He" // fail
+[] |> shouldBeEmpty // pass
+[1] |> shouldHaveLength 1 // pass
+2 |> shouldBeGreaterThan 1 // pass
+1 |> shouldBeSmallerThan 2 // pass
+(fun () -> null |> Array.sortInPlace) |> shouldFail<ArgumentNullException> // pass
+(fun () -> failwith "error") |> shouldFailWithMessage "error" // pass
+[1;2] |> shouldEquivalent [2;1] // pass
+obj() |> shouldEquivalent (obj()) // pass
+```
 
 ## Migration from FsUnitTyped
 
@@ -14,3 +32,13 @@ to
 ```fsharp
 open FsUnit.Light
 ```
+
+## Nuget Packages:
+
+
+
+| Framework  | Package                                                                    |
+|------------|----------------------------------------------------------------------------|
+| **xUnit**  | [FsUnit.Light.xUnit](https://www.nuget.org/packages/FsUnit.Light.xUnit)    |
+| **NUnit**  | [FsUnit.Light.NUnit](https://www.nuget.org/packages/FsUnit.Light.NUnit)    |
+| **MSTest** | [FsUnit.Light.MSTest](https://www.nuget.org/packages/FsUnit.Light.MSTest)  |

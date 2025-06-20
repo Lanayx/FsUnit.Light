@@ -175,12 +175,66 @@ module ShouldFailTests =
 
     [<Test>]
     let ``shouldFail passes when the function throws the expected exception``() =
-        shouldFail<ArgumentNullException>(fun () -> null |> Array.max |> ignore)
-        shouldFail<ArgumentException>(fun () -> [||] |> Array.randomChoice |> ignore)
-        shouldFail<exn>(fun () -> failwith "Test failure")
+        (fun () -> null |> Array.max |> ignore)
+        |> shouldFail<ArgumentNullException>
+        (fun () -> [||] |> Array.randomChoice |> ignore)
+        |> shouldFail<ArgumentException>
+        (fun () -> failwith "Test failure")
+        |> shouldFail<exn>
 
     [<Test>]
     let ``shouldFail fails when the function does not throw the expected exception``() =
-        shouldFail<AssertionException>(fun () -> shouldFail<ArgumentNullException>(fun () -> [|1|] |> Array.max |> ignore))
-        shouldFail<AssertionException>(fun () -> shouldFail<ArgumentException>(fun () -> [|1|] |> Array.randomChoice |> ignore))
-        shouldFail<AssertionException>(fun () -> shouldFail id)
+        shouldFail<AssertionException>(fun () ->
+            (fun () -> [|1|] |> Array.max |> ignore)
+            |> shouldFail<ArgumentNullException>
+        )
+        shouldFail<AssertionException>(fun () ->
+            (fun () -> [|1|] |> Array.randomChoice |> ignore)
+            |> shouldFail<ArgumentException>
+        )
+        shouldFail<AssertionException>(fun () -> id |> shouldFail)
+
+module ShouldFailWithMessageTests =
+
+    [<Test>]
+    let ``shouldFailWithMessage passes when the function throws the expected exception``() =
+        (fun () -> null |> Array.max |> ignore)
+        |> shouldFailWithMessage<ArgumentNullException> "Value cannot be null. (Parameter 'array')"
+        (fun () -> [||] |> Array.randomChoice |> ignore)
+        |> shouldFailWithMessage<ArgumentException> "The input array was empty. (Parameter 'source')"
+        (fun () -> failwith "Test failure")
+        |> shouldFailWithMessage "Test failure"
+
+    [<Test>]
+    let ``shouldFailWithMessage fails when the function does not throw the expected exception``() =
+        shouldFail<AssertionException>(fun () ->
+            (fun () -> null |> Array.max |> ignore)
+            |> shouldFailWithMessage<ArgumentNullException> "Wrong exception message."
+        )
+        shouldFail<AssertionException>(fun () ->
+            (fun () -> [||] |> Array.randomChoice |> ignore)
+            |> shouldFailWithMessage<ArgumentException> "Wrong exception message."
+        )
+        shouldFail<AssertionException>(fun () ->
+            (fun () -> failwith "Test failure")
+            |> shouldFailWithMessage "Wrong exception message.")
+        shouldFail<AssertionException>(fun () -> id |> shouldFailWithMessage "")
+
+module ShouldEquivalentTests =
+
+    type Item() =
+        member val Id = "" with get, set
+
+    [<Test>]
+    let ``shouldEquivalent passes for equivalent values``() =
+        1 |> shouldEquivalent 1
+        [ 1; 2; 3 ] |> shouldEquivalent [ 3; 2; 1 ]
+        Item(Id = "1") |> shouldEquivalent (Item(Id = "1"))
+
+    [<Test>]
+    let ``shouldEquivalent fails for non-equivalent values``() =
+        shouldFail<AssertionException>(fun () -> 1 |> shouldEquivalent 2)
+        shouldFail<AssertionException>(fun () -> Item() |> shouldEquivalent (Item(Id = null)))
+        shouldFail<AssertionException>(fun () -> [ 1; 2; 3 ] |> shouldEquivalent [ 1; 2 ])
+        shouldFail<AssertionException>(fun () -> [| 1; 2; 3 |] |> shouldEquivalent [| 1; 2; 2; 3 |])
+        shouldFail<AssertionException>(fun () -> seq { 1; 2; 3 } |> shouldEquivalent (seq { 1; 2; 3; 4 }))
