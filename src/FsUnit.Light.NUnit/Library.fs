@@ -1,5 +1,7 @@
 ﻿namespace FsUnit.Light
 
+open System
+open System.Collections
 open NUnit.Framework
 
 [<AutoOpen>]
@@ -43,5 +45,9 @@ module NUnit =
     let inline shouldHaveLength (expected: int) actual =
         Assert.That(Seq.length actual, Is.EqualTo(expected))
 
-    let inline shouldEquivalent (expected: 'a seq) (actual: 'a seq) =
-        Assert.That(actual, Is.EquivalentTo<'a>(expected))
+    let inline shouldEquivalent (expected: 'a) (actual: 'a) =
+        match box expected, box actual with
+        | :? IEnumerable as expectedEnum, (:? IEnumerable as actualEnum) ->
+            Assert.That(actualEnum, Is.EquivalentTo(expectedEnum))
+        | _ ->
+            Assert.That(expected, Is.EqualTo<'a>(actual).UsingPropertiesComparer())

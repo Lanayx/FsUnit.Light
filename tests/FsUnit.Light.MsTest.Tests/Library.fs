@@ -210,7 +210,7 @@ type ShouldFailWithMessageTests() =
         (fun () -> [||] |> Array.randomChoice |> ignore)
         |> shouldFailWithMessage<ArgumentException> "The input array was empty. (Parameter 'source')"
         (fun () -> failwith "Test failure")
-        |> shouldFailWithMessage<exn> "Test failure"
+        |> shouldFailWithMessage "Test failure"
 
     [<TestMethod>]
     member _.``shouldFailWithMessage fails when the function does not throw the expected exception``() =
@@ -232,12 +232,14 @@ type ShouldEquivalentTests() =
 
     [<TestMethod>]
     member _.``shouldEquivalent passes for equivalent values``() =
+        1 |> shouldEquivalent 1
         [ 1; 2; 3 ] |> shouldEquivalent [ 3; 2; 1 ]
-        [| 1; 2; 3 |] |> shouldEquivalent [| 3; 2; 1 |]
-        seq { 1; 2; 3 } |> shouldEquivalent (seq { 3; 2; 1 })
+        Item(Id = "1") |> shouldEquivalent (Item(Id = "1"))
 
     [<TestMethod>]
     member _.``shouldEquivalent fails for non-equivalent values``() =
+        shouldFail<AssertFailedException>(fun () -> 1 |> shouldEquivalent 2)
+        shouldFail<AssertFailedException>(fun () -> Item() |> shouldEquivalent (Item(Id = null)))
         shouldFail<AssertFailedException>(fun () -> [ 1; 2; 3 ] |> shouldEquivalent [ 1; 2 ])
         shouldFail<AssertFailedException>(fun () -> [| 1; 2; 3 |] |> shouldEquivalent [| 1; 2; 2; 3 |])
         shouldFail<AssertFailedException>(fun () -> seq { 1; 2; 3 } |> shouldEquivalent (seq { 1; 2; 3; 4 }))

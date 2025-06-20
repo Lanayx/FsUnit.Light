@@ -202,7 +202,7 @@ module ShouldFailWithMessageTests =
         (fun () -> [||] |> Array.randomChoice |> ignore)
         |> shouldFailWithMessage<ArgumentException> "The input array was empty. (Parameter 'source')"
         (fun () -> failwith "Test failure")
-        |> shouldFailWithMessage<exn> "Test failure"
+        |> shouldFailWithMessage "Test failure"
 
     [<Fact>]
     let ``shouldFailWithMessage fails when the function does not throw the expected exception``() =

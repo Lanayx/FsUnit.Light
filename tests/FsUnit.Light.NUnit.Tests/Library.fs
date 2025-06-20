@@ -203,7 +203,7 @@ module ShouldFailWithMessageTests =
         (fun () -> [||] |> Array.randomChoice |> ignore)
         |> shouldFailWithMessage<ArgumentException> "The input array was empty. (Parameter 'source')"
         (fun () -> failwith "Test failure")
-        |> shouldFailWithMessage<exn> "Test failure"
+        |> shouldFailWithMessage "Test failure"
 
     [<Test>]
     let ``shouldFailWithMessage fails when the function does not throw the expected exception``() =
@@ -222,14 +222,19 @@ module ShouldFailWithMessageTests =
 
 module ShouldEquivalentTests =
 
+    type Item() =
+        member val Id = "" with get, set
+
     [<Test>]
     let ``shouldEquivalent passes for equivalent values``() =
+        1 |> shouldEquivalent 1
         [ 1; 2; 3 ] |> shouldEquivalent [ 3; 2; 1 ]
-        [| 1; 2; 3 |] |> shouldEquivalent [| 3; 2; 1 |]
-        seq { 1; 2; 3 } |> shouldEquivalent (seq { 3; 2; 1 })
+        Item(Id = "1") |> shouldEquivalent (Item(Id = "1"))
 
     [<Test>]
     let ``shouldEquivalent fails for non-equivalent values``() =
+        shouldFail<AssertionException>(fun () -> 1 |> shouldEquivalent 2)
+        shouldFail<AssertionException>(fun () -> Item() |> shouldEquivalent (Item(Id = null)))
         shouldFail<AssertionException>(fun () -> [ 1; 2; 3 ] |> shouldEquivalent [ 1; 2 ])
         shouldFail<AssertionException>(fun () -> [| 1; 2; 3 |] |> shouldEquivalent [| 1; 2; 2; 3 |])
         shouldFail<AssertionException>(fun () -> seq { 1; 2; 3 } |> shouldEquivalent (seq { 1; 2; 3; 4 }))
