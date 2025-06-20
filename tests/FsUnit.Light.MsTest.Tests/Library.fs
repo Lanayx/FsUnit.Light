@@ -181,12 +181,63 @@ type ShouldFailTests() =
 
     [<TestMethod>]
     member _.``shouldFail passes when the function throws the expected exception``() =
-        shouldFail<ArgumentNullException>(fun () -> null |> Array.max |> ignore)
-        shouldFail<ArgumentException>(fun () -> [||] |> Array.randomChoice |> ignore)
-        shouldFail<exn>(fun () -> failwith "Test failure")
+        (fun () -> null |> Array.max |> ignore)
+        |> shouldFail<ArgumentNullException>
+        (fun () -> [||] |> Array.randomChoice |> ignore)
+        |> shouldFail<ArgumentException>
+        (fun () -> failwith "Test failure")
+        |> shouldFail<exn>
 
     [<TestMethod>]
     member _.``shouldFail fails when the function does not throw the expected exception``() =
-        shouldFail<AssertFailedException>(fun () -> shouldFail<ArgumentNullException>(fun () -> [|1|] |> Array.max |> ignore))
-        shouldFail<AssertFailedException>(fun () -> shouldFail<ArgumentException>(fun () -> [|1|] |> Array.randomChoice |> ignore))
-        shouldFail<AssertFailedException>(fun () -> shouldFail id)
+        shouldFail<AssertFailedException>(fun () ->
+            (fun () -> [|1|] |> Array.max |> ignore)
+            |> shouldFail<ArgumentNullException>
+        )
+        shouldFail<AssertFailedException>(fun () ->
+            (fun () -> [|1|] |> Array.randomChoice |> ignore)
+            |> shouldFail<ArgumentException>
+        )
+        shouldFail<AssertFailedException>(fun () -> id |> shouldFail)
+
+[<TestClass>]
+type ShouldFailWithMessageTests() =
+
+    [<TestMethod>]
+    member _.``shouldFailWithMessage passes when the function throws the expected exception``() =
+        (fun () -> null |> Array.max |> ignore)
+        |> shouldFailWithMessage<ArgumentNullException> "Value cannot be null. (Parameter 'array')"
+        (fun () -> [||] |> Array.randomChoice |> ignore)
+        |> shouldFailWithMessage<ArgumentException> "The input array was empty. (Parameter 'source')"
+        (fun () -> failwith "Test failure")
+        |> shouldFailWithMessage<exn> "Test failure"
+
+    [<TestMethod>]
+    member _.``shouldFailWithMessage fails when the function does not throw the expected exception``() =
+        shouldFail<AssertFailedException>(fun () ->
+            (fun () -> null |> Array.max |> ignore)
+            |> shouldFailWithMessage<ArgumentNullException> "Wrong exception message."
+        )
+        shouldFail<AssertFailedException>(fun () ->
+            (fun () -> [||] |> Array.randomChoice |> ignore)
+            |> shouldFailWithMessage<ArgumentException> "Wrong exception message."
+        )
+        shouldFail<AssertFailedException>(fun () ->
+            (fun () -> failwith "Test failure")
+            |> shouldFailWithMessage "Wrong exception message.")
+        shouldFail<AssertFailedException>(fun () -> id |> shouldFailWithMessage "")
+
+[<TestClass>]
+type ShouldEquivalentTests() =
+
+    [<TestMethod>]
+    member _.``shouldEquivalent passes for equivalent values``() =
+        [ 1; 2; 3 ] |> shouldEquivalent [ 3; 2; 1 ]
+        [| 1; 2; 3 |] |> shouldEquivalent [| 3; 2; 1 |]
+        seq { 1; 2; 3 } |> shouldEquivalent (seq { 3; 2; 1 })
+
+    [<TestMethod>]
+    member _.``shouldEquivalent fails for non-equivalent values``() =
+        shouldFail<AssertFailedException>(fun () -> [ 1; 2; 3 ] |> shouldEquivalent [ 1; 2 ])
+        shouldFail<AssertFailedException>(fun () -> [| 1; 2; 3 |] |> shouldEquivalent [| 1; 2; 2; 3 |])
+        shouldFail<AssertFailedException>(fun () -> seq { 1; 2; 3 } |> shouldEquivalent (seq { 1; 2; 3; 4 }))

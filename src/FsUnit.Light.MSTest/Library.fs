@@ -1,5 +1,6 @@
 ﻿namespace FsUnit.Light
 
+open System.Collections.Generic
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
 [<AutoOpen>]
@@ -29,6 +30,9 @@ module MSTest =
     let inline shouldFail<'exn when 'exn :> exn>(f: unit -> unit) =
         f |> Assert.Throws<'exn> |> ignore
 
+    let inline shouldFailWithMessage<'ex when 'ex :> exn> (expected: string) (f: unit -> unit)  =
+        f |> Assert.Throws<'ex> |> _.Message |> shouldEqual expected
+
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.Contains(expected, actual)
 
@@ -37,3 +41,6 @@ module MSTest =
 
     let inline shouldHaveLength (expected: int) (actual: 'a seq) =
         Assert.AreEqual<int>(expected, Seq.length actual)
+
+    let inline shouldEquivalent (expected: 'a seq) (actual: 'a seq) =
+        CollectionAssert.AreEquivalent<'a>(expected, actual, EqualityComparer<'a>.Default)
