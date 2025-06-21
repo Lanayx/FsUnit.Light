@@ -19,7 +19,7 @@ You can find some considerations [in the initial issue](https://github.com/fspro
 (fun () -> null |> Array.sortInPlace) |> shouldFail<ArgumentNullException> // pass
 (fun () -> failwith "error") |> shouldFailWithMessage "error" // pass
 [1;2] |> shouldEquivalent [2;1] // pass
-obj() |> shouldEquivalent (obj()) // pass
+Item(Id="1") |> shouldEquivalent (Item(Id ="1")) // pass
 ```
 
 ## Migration from FsUnitTyped
