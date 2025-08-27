@@ -1,4 +1,7 @@
 # FsUnit.Light
+
+<img align="right" width="100" style="margin-left:20px" src="https://github.com/Lanayx/FsUnit.Light/raw/refs/heads/develop/images/fsunit-light.png">
+
 Minimalistic version of [FsUnitTyped](https://fsprojects.github.io/FsUnit/FsUnitTyped.html) for xUnit, NUnit ans MSTest.
 
 It provides zero-cost abstraction over native assertions with no dependency on `FsUnit`.
