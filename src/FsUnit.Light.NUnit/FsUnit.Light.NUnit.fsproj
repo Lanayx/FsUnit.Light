@@ -13,19 +13,23 @@
         <RepositoryUrl>https://github.com/Lanayx/FsUnit.Light</RepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/Lanayx/FsUnit.Light/tree/main/src/FsUnit.Light.NUnit</PackageProjectUrl>
+        <PackageIcon>fsunit-light-128.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
         <PackageTags>FsUnit;NUnit;F#;FSharp</PackageTags>
         <Authors>Vladimir Shchur and contributors</Authors>
         <Copyright>Copyright (c) Vladimir Shchur 2025</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Version>0.2.0</Version>
-        <PackageVersion>0.2.0</PackageVersion>
-        <PackageReleaseNotes>shouldFailWithMessage and shouldEquivalent</PackageReleaseNotes>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <Version>1.0.0</Version>
+        <PackageVersion>1.0.0</PackageVersion>
+        <PackageReleaseNotes>Package icon added</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Library.fs" />
+        <None Include="..\..\images\fsunit-light-128.png" Pack="true" PackagePath="\" />
         <None Include="README.md" Pack="true" PackagePath="\" />
+        <Compile Include="Library.fs" />
     </ItemGroup>
 
     <ItemGroup>
