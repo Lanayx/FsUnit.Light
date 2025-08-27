@@ -227,6 +227,8 @@ module ShouldEquivalentTests =
 
     [<Test>]
     let ``shouldEquivalent passes for equivalent values``() =
+        null |> shouldEquivalent null
+        //obj() |> shouldEquivalent (obj())
         1 |> shouldEquivalent 1
         [ 1; 2; 3 ] |> shouldEquivalent [ 3; 2; 1 ]
         Item(Id = "1") |> shouldEquivalent (Item(Id = "1"))
