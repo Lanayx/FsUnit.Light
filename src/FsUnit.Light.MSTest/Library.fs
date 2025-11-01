@@ -3,6 +3,7 @@
 open System.Collections
 open System.Linq
 open System.Text.Json
+open System.Threading.Tasks
 open Microsoft.VisualStudio.TestTools.UnitTesting
 
 [<AutoOpen>]
@@ -34,6 +35,18 @@ module MSTest =
 
     let inline shouldFailWithMessage<'ex when 'ex :> exn> (expected: string) (f: unit -> unit)  =
         f |> Assert.Throws<'ex> |> _.Message |> shouldEqual expected
+
+    let inline shouldFailTask<'ex when 'ex :> exn> (t: Task) =
+        task {
+            let! _ = Assert.ThrowsExceptionAsync<'ex>(fun () -> t)
+            return ()
+        }
+
+    let inline shouldFailTaskWithMessage<'ex when 'ex :> exn> (expected: string) (t: Task) =
+        task {
+            let! ex = Assert.ThrowsExceptionAsync<'ex>(fun () -> t)
+            ex.Message |> shouldEqual expected
+        }
 
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.Contains(expected, actual)

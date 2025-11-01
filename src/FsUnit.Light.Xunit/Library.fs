@@ -1,5 +1,6 @@
 ﻿namespace FsUnit.Light
 
+open System.Threading.Tasks
 open Xunit
 
 [<AutoOpen>]
@@ -35,6 +36,18 @@ Actual:   {actual}")
 
     let inline shouldFailWithMessage<'ex when 'ex :> exn> (expected: string) (f: unit -> unit) =
         f |> Assert.Throws<'ex> |> _.Message |> shouldEqual expected
+
+    let inline shouldFailTask<'ex when 'ex :> exn> (t: Task) =
+         task {
+             let! _ = Assert.ThrowsAsync<'ex>(fun () -> t)
+             return ()
+         }
+
+    let inline shouldFailTaskWithMessage<'ex when 'ex :> exn> (expected: string) (t: Task) =
+        task {
+            let! ex = Assert.ThrowsAsync<'ex>(fun () -> t)
+            ex.Message |> shouldEqual expected
+        }
 
     let inline shouldContainText (expected: string) (actual: string) =
         Assert.Contains(expected, actual)

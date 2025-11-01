@@ -1,7 +1,7 @@
 ﻿namespace FsUnit.Light
 
-open System
 open System.Collections
+open System.Threading.Tasks
 open NUnit.Framework
 
 [<AutoOpen>]
@@ -33,6 +33,14 @@ module NUnit =
 
     let inline shouldFailWithMessage<'ex when 'ex :> exn> (expected: string) (f: unit -> unit) =
         f |> Assert.Throws<'ex> |> function
+            | null -> Assert.Fail("Actual exception is null.")
+            | ex -> ex.Message |> shouldEqual expected
+
+    let inline shouldFailTask<'ex when 'ex :> exn> (t: Task) =
+        (fun () -> t) |> Assert.ThrowsAsync<'ex> |> ignore
+
+    let inline shouldFailTaskWithMessage<'ex when 'ex :> exn> (expected: string) (t: Task) =
+        (fun () -> t) |> Assert.ThrowsAsync<'ex> |> function
             | null -> Assert.Fail("Actual exception is null.")
             | ex -> ex.Message |> shouldEqual expected
 

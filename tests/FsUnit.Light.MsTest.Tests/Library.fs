@@ -1,6 +1,7 @@
 ﻿namespace FsUnit.Light.MSTest.Tests
 
 open System
+open System.Threading.Tasks
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open FsUnit.Light
 
@@ -226,6 +227,79 @@ type ShouldFailWithMessageTests() =
             (fun () -> failwith "Test failure")
             |> shouldFailWithMessage "Wrong exception message.")
         shouldFail<AssertFailedException>(fun () -> id |> shouldFailWithMessage "")
+
+[<TestClass>]
+type ShouldFailTaskTests() =
+
+    [<TestMethod>]
+    member _.``shouldFailTask passes when the task throws the expected exception``() : Task =
+        task {
+            do! task {
+                    raise (ArgumentNullException())
+                } |> shouldFailTask<ArgumentNullException>
+            do! task {
+                    do! Task.Yield()
+                    raise (ArgumentException())
+                } |> shouldFailTask<ArgumentException>
+            do! Task.FromException(exn "test failure")
+                |> shouldFailTask<exn>
+        }
+
+    [<TestMethod>]
+    member _.``shouldFailTask fails when the task does not throw the expected exception``() : Task =
+        task {
+            do! shouldFailTask<AssertFailedException>(
+                task {
+                    return 0
+                } |> shouldFailTask<ArgumentNullException>
+            )
+            do! shouldFailTask<AssertFailedException>(
+                task {
+                    raise (ArgumentNullException())
+                } |> shouldFailTask<TimeoutException>
+            )
+            do! shouldFailTask<AssertFailedException>(
+                Task.FromResult 0
+                |> shouldFailTask<ArgumentException>
+            )
+        }
+
+[<TestClass>]
+type ShouldFailTaskWithMessageTests() =
+
+    [<TestMethod>]
+    member _.``shouldFailTaskWithMessage passes when the task throws the expected exception``() : Task =
+        task {
+            do! task {
+                    raise (ArgumentException "Test failure")
+                } |> shouldFailTaskWithMessage<ArgumentException> "Test failure"
+            do! task {
+                    do! Task.Yield()
+                    raise (ArgumentException "Test failure")
+                } |> shouldFailTaskWithMessage<ArgumentException> "Test failure"
+            do! Task.FromException(exn "Test failure")
+                |> shouldFailTaskWithMessage<exn> "Test failure"
+        }
+
+    [<TestMethod>]
+    member _.``shouldFailTaskWithMessage fails when the task does not throw the expected exception or message``() : Task =
+        task {
+            do! shouldFailTask<AssertFailedException>(
+                task {
+                    raise (InvalidOperationException "A")
+                } |> shouldFailTaskWithMessage<InvalidOperationException> "B"
+            )
+            do! shouldFailTask<AssertFailedException>(
+                task {
+                    do! Task.Yield()
+                    raise (InvalidOperationException "msg")
+                } |> shouldFailTaskWithMessage<ArgumentException> "msg"
+            )
+            do! shouldFailTask<AssertFailedException>(
+                Task.CompletedTask
+                |> shouldFailTaskWithMessage<exn> ""
+            )
+        }
 
 [<TestClass>]
 type ShouldEquivalentTests() =
