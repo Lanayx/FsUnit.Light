@@ -1,6 +1,7 @@
 ﻿namespace FsUnit.Light.NUnit.Tests
 
 open System
+open System.Threading.Tasks
 open NUnit.Framework
 open FsUnit.Light
 
@@ -219,6 +220,69 @@ module ShouldFailWithMessageTests =
             (fun () -> failwith "Test failure")
             |> shouldFailWithMessage "Wrong exception message.")
         shouldFail<AssertionException>(fun () -> id |> shouldFailWithMessage "")
+
+module ShouldFailTaskTests =
+
+    [<Test>]
+    let ``shouldFailTask passes when the task throws the expected exception``() =
+        task {
+            raise (ArgumentNullException())
+        } |> shouldFailTask<ArgumentNullException>
+        task {
+            do! Task.Yield()
+            raise (ArgumentException())
+        } |> shouldFailTask<ArgumentException>
+        Task.FromException(exn "test failure")
+        |> shouldFailTask<exn>
+
+    [<Test>]
+    let ``shouldFailTask fails when the task does not throw the expected exception``() =
+        shouldFail<AssertionException>(fun () ->
+            task {
+                return 0
+            } |> shouldFailTask<ArgumentNullException>
+        )
+        shouldFail<AssertionException>(fun () ->
+            task {
+                raise (ArgumentNullException())
+            } |> shouldFailTask<TimeoutException>
+        )
+        shouldFail<AssertionException>(fun () ->
+            Task.FromResult 0
+            |> shouldFailTask<ArgumentException>
+        )
+
+module ShouldFailTaskWithMessageTests =
+
+    [<Test>]
+    let ``shouldFailTaskWithMessage passes when the task throws the expected exception``() =
+        task {
+            raise (ArgumentException "Test failure")
+        } |> shouldFailTaskWithMessage<ArgumentException> "Test failure"
+        task {
+            do! Task.Yield()
+            raise (ArgumentException "Test failure")
+        } |> shouldFailTaskWithMessage<ArgumentException> "Test failure"
+        Task.FromException(exn "Test failure")
+        |> shouldFailTaskWithMessage<exn> "Test failure"
+
+    [<Test>]
+    let ``shouldFailTaskWithMessage fails when the task does not throw the expected exception or message``() =
+        shouldFail<AssertionException>(fun () ->
+            task {
+                raise (InvalidOperationException "A")
+            } |> shouldFailTaskWithMessage<InvalidOperationException> "B"
+        )
+        shouldFail<AssertionException>(fun () ->
+            task {
+                do! Task.Yield()
+                raise (InvalidOperationException "msg")
+            } |> shouldFailTaskWithMessage<ArgumentException> "msg"
+        )
+        shouldFail<AssertionException>(fun () ->
+            Task.CompletedTask
+            |> shouldFailTaskWithMessage<exn> ""
+        )
 
 module ShouldEquivalentTests =
 
