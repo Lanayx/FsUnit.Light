@@ -27,6 +27,8 @@ task { failwith "error" } |> shouldFailTaskWithMessage "error" // pass (should b
 Item(Id="1") |> shouldEquivalent (Item(Id ="1")) // pass
 ```
 
+You can also find examples in the [real tests](https://github.com/Lanayx/FsUnit.Light/tree/develop/tests)
+
 ## Migration from FsUnitTyped
 
 You need to change
